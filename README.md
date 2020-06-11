@@ -3,14 +3,41 @@
 The files in this repository were used to configure the network depicted below.
 
 Project1/Project_1_Red-Team Network Diagram.png
+https://tinyurl.com/yayqcrrp
+
+The network diagram can also be found at the link above. 
 
 
-These files have been tested and used to generate a live ELK deployment on Azure. They can be used to either recreate the entire deployment pictured above. Alternatively, select portions of the _____ file may be used to install only certain pieces of it, such as Filebeat.
+These files have been tested and used to generate a live ELK deployment on Azure. They can be used to either recreate the entire deployment pictured above. Alternatively, select portions of the main.yml playbook file may be used to install only certain pieces of it, such as Filebeat.
 
-  - _TODO: Enter the playbook file._
+  ---
+- name: installing and launching filebeat
+  hosts: webservers
+  become: true
+  tasks:
+
+  - name: download filebeat deb
+    command: curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.4.0-amd64.deb
+
+  - name: install filebeat deb
+    command: dpkg -i filebeat-7.4.0-amd64.deb
+
+  - name: drop in filebeat.yml
+    copy:
+      src: ./files/filebeat-configuration.yml
+      dest: /etc/filebeat/filebeat.yml
+
+  - name: enable and configure system module
+    command: filebeat modules enable system
+
+  - name: setup filebeat
+    command: filebeat setup
+
+  - name: start filebeat service
+    command: service filebeat start
 
 This document contains the following details:
-- Description of the Topologu
+- Description of the Topology
 - Access Policies
 - ELK Configuration
   - Beats in Use
